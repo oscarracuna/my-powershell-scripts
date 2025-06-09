@@ -1,7 +1,7 @@
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 Write-Host -Foreground "Yellow" "This has to be ran as admin, so keep that in mind"
-
+pause
 # Install Graph
 Write-Host -Foreground "Yellow" "Installing Graph..."
 Install-Module Microsoft.Graph -Scope CurrentUser -Repository PSGallery -Force
