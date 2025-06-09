@@ -1,4 +1,4 @@
-$InputFile = Import-CSV "C:\email-deactivation-O365\deactivate-users.csv"
+$InputFile = Import-CSV "$PSScriptRoot\deactivate-users.csv"
 Foreach ($User in $InputFile) {
   $Login = $User.Login
   $Email = $User.Email
