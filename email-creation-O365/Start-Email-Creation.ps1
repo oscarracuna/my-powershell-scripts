@@ -1,0 +1,5 @@
+&"C:\Email-Creation-O365\Steps\o365-import-PART1.ps1"
+&"C:\Email-Creation-O365\Steps\o365-import-PART2.ps1"
+&"C:\Email-Creation-O365\Steps\o365-import-PART3.ps1"
+&"C:\Email-Creation-O365\Steps\o365-import-PART4.ps1"
+&"C:\Email-Creation-O365\Steps\o365-import-PART5.ps1"
