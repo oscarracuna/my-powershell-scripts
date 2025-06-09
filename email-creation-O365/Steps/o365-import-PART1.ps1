@@ -5,14 +5,14 @@
 $User_Input = Read-Host "Do you want to obtain a fresh copy of O365 mailbox information?"
 If("$User_Input" -eq "Yes") {
     write-host -foreground "cyan" "Obtaining fresh O365 mailbox information..."
-    Get-EXOMailbox -Resultsize Unlimited | Select-Object DisplayName,EmailAddresses | Export-Csv "C:\Email-Creation-O365\Email-Dump.csv" –NoTypeInformation
+    Get-EXOMailbox -Resultsize Unlimited | Select-Object DisplayName,EmailAddresses | Export-Csv "$PSScriptRoot\Email-Dump.csv" –NoTypeInformation
 }
 else {
   Write-Output "Skipping New Data"
   }
 
-$InputFile1 = Import-CSV "C:\Email-Creation-O365\import-users.csv"
-$InputFile2 = Import-CSV "C:\Email-Creation-O365\o365-outall.csv"
+$InputFile1 = Import-CSV "$PSScriptRoot\Import-Users.csv"
+$InputFile2 = Import-CSV "$PSScriptRoot\o365-outall.csv"
 foreach ($User in $InputFile1) {
 $Email = $User.Email
 write-host -foreground "yellow" "Verifying if $Email is unique in O365..."

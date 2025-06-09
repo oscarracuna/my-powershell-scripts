@@ -1,4 +1,4 @@
-$InputFile = Import-CSV "C:\Email-Creation-O365\Import-Users.csv"
+$InputFile = Import-CSV "$PSScriptRoot\Import-Users.csv"
 foreach ($User in $InputFile)
 {
 $Login = $User.Login
