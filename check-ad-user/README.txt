@@ -1,0 +1,1 @@
+This script asks for a username and gets from AD the username, mail and some other cool stuff. I chained it with the deactivation script to automatically parse the data in a format that we needed for my previous company.
