@@ -20,6 +20,7 @@ function getUsername {
 
 function parseInfo {
   $termDate = Read-Host "Enter TERM date (YYYYMMDD)"
+  $path = $PSScriptRoot + "..\email-deactivation-O365\deactivate-users.csv"
   try {
     Get-AdUser -Identity $script:input -Properties * | Select mail,samaccountname | ForEach-Object { 
       $email = $_.mail
@@ -42,7 +43,7 @@ function parseInfo {
       Write-Error "Something went wrong while adding TERM to email and username"
     }
     try {
-    $userList | Export-Csv -Path "C:\email-deactivation-O365\deactivate-users.csv" -NoTypeInformation
+    $userList | Export-Csv -Path "$path" -NoTypeInformation
   Write-Host -Foreground "green" "Data has been parsed to CSV"
     }
     catch {
