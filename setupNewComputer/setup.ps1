@@ -77,9 +77,9 @@ else {
     Write-Host "D: already exists. Skipping partition creation." -Foreground Green
 }
 
-# =======================
-# Create Required Folders
-# =======================
+# ===============================
+# Create Folders in new partition
+# ===============================
 
 $folders = @(
     "D:\Profiles",
@@ -106,7 +106,9 @@ If (-not (Get-LocalUser -Name $userName -ErrorAction SilentlyContinue)) {
 
     Write-Host "Creating local admin user: $userName" -Foreground Yellow
 
-    New-LocalUser -Name $userName -NoPassword
+    $newSoportePassword = Read-Host -AsSecureString "Enter new password:"
+    
+    New-LocalUser -Name $userName -Password $newSoportePassword
 
     Add-LocalGroupMember -Group "Administrators" -Member $userName
 } else {
@@ -122,22 +124,17 @@ $profileListKey = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileLis
 
 Write-Host "Setting ProfilesDirectory to D:\Profiles" -Foreground Yellow
 
-Set-ItemProperty `
-    -Path $profileListKey `
-    -Name "ProfilesDirectory" `
-    -Value "D:\Profiles"
+Set-ItemProperty -Path $profileListKey -Name "ProfilesDirectory" -Value "D:\Profiles"
 
 # =========================================
 # Disable admin account and change password
 # =========================================
 
-$newPassword = Read-Host -AsSecureString "Enter the new password for Administrator account:"
+$newAdminPassword = Read-Host -AsSecureString "Enter the new password for Administrator account:"
 Write-Host -Foreground Yellow "Changing Administrator password and disabling account..."
 Set-LocalUser -Name Administator -Password $newPassword
 Disable-LocalUser -Name Administrator
 Write-Host -Foreground Green "Admin password changed and account disabled."
-
-
 
 # ===============================================
 # Getting printer drivers and installing printers
