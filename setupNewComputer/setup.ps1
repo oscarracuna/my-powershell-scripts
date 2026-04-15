@@ -126,6 +126,32 @@ Write-Host "Setting ProfilesDirectory to D:\Profiles" -Foreground Yellow
 
 Set-ItemProperty -Path $profileListKey -Name "ProfilesDirectory" -Value "D:\Profiles"
 
+
+
+# ================
+# Install software
+# ================
+$javaPath = "JavaOCI/jre-8u341-windows-i586.exe"
+
+if (-not (Test-Path $javaPath)) {
+  Try {
+    $javaPath /s
+  }
+  Catch {
+    Write-Error "Something went wrong with the Java Installation."
+  }
+}
+
+# =================================
+# Disable Windows Defender Firewall
+# =================================
+Write-Host -Foreground Yellow "Checking if Firewall is enabled..."
+Get-NetFirewallProfile | Select Name,Enabled 
+
+Write-Host -Foreground Yellow "Disabling Firewall..."
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
+
+
 # =========================================
 # Disable admin account and change password
 # =========================================
