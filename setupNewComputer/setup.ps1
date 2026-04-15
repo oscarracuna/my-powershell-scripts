@@ -41,9 +41,7 @@ If (-not $cPartition) {
 }
 
 # Determine supported shrink size
-$supported = Get-PartitionSupportedSize `
-    -DiskNumber $diskNumber `
-    -PartitionNumber $cPartition.PartitionNumber
+$supported = Get-PartitionSupportedSize -DiskNumber $diskNumber -PartitionNumber $cPartition.PartitionNumber
 
 If ($desiredCSizeBytes -lt $supported.SizeMin) {
     Write-Error "Cannot shrink C: to 40%. Minimum supported size is $($supported.SizeMin / 1GB) GB."
@@ -52,12 +50,7 @@ If ($desiredCSizeBytes -lt $supported.SizeMin) {
 
 Write-Host "Shrinking C: to 40% of disk..." -Foreground Yellow
 
-Resize-Partition `
-    -DiskNumber $diskNumber `
-    -PartitionNumber $cPartition.PartitionNumber `
-    -Size $desiredCSizeBytes
-
-
+Resize-Partition -DiskNumber $diskNumber -PartitionNumber $cPartition.PartitionNumber -Size $desiredCSizeBytes
 
 # Check if D: already exists
 $existingD = Get-Partition -DiskNumber $diskNumber -ErrorAction SilentlyContinue |
@@ -67,16 +60,11 @@ if (-not $existingD) {
 
     Write-Host "Creating D: partition from remaining space..." -Foreground Yellow
 
-    $newPartition = New-Partition `
-        -DiskNumber $diskNumber `
-        -UseMaximumSize `
-        -DriveLetter 'D'
+    $newPartition = New-Partition -DiskNumber $diskNumber -UseMaximumSize -DriveLetter 'D'
 
-    Format-Volume `
-        -Partition $newPartition `
-        -FileSystem NTFS `
-        -NewFileSystemLabel "New Volume" `
-        -Confirm:$false
+    Format-Volume -Partition $newPartition -FileSystem NTFS -NewFileSystemLabel "New Volume" -Confirm:$false
+
+    Write-Host -Foreground Green "[x] Parition D: has been created."
 }
 else {
     Write-Host "D: already exists. Skipping partition creation." -Foreground Green
@@ -86,7 +74,7 @@ else {
 # Create Folders in new partition
 # ===============================
 
-Write-Host -Foreground Yellow "Creating folders in D:\"
+Write-Host -Foreground Yellow "[x] Creating folders in D:\"
 
 $folders = @(
     "D:\Profiles",
@@ -99,7 +87,7 @@ foreach ($folder in $folders) {
         New-Item -Path $folder -ItemType Directory -Force | Out-Null
         Write-Host -Foreground Green "[x] $folder created"
     } else {
-        Write-Host "[ ] $folder already exists"
+        Write-Host "$folder already exists"
     }
 }
 
@@ -179,11 +167,34 @@ $newAdminPassword = Read-Host -AsSecureString "Enter the new password for Admini
 Write-Host -Foreground Yellow "Changing Administrator password and disabling account..."
 Set-LocalUser -Name Administator -Password $newAdminPassword
 Disable-LocalUser -Name Administrator
-Write-Host -Foreground Green "Admin password changed and account disabled."
+Write-Host -Foreground Green "[x] Local Administrator password changed and account disabled."
 
 # ===============================================
 # Getting printer drivers and installing printers
 # ===============================================
+
+Write-Host -Foreground Yellow "Installing HP color printer."
+Try {
+  Start-Process -FilePath ".\HP-Driver-UPDPCL6\Install.exe" -ArgumentList "/q /h /dst /sm192.168.17.41 /nHPColor"
+  Write-Host -Foreground Green "[x] Printer has been installed."
+} Catch {
+  Write-Error "Unable to add printer."
+}
+
+Write-Host -Foreground Yellow "Installing Ricoh printer."
+Try  {
+  pnputil -i -a ".\ricoh-driver\disk1\MP_350__.inf"
+  Add-PrinterPort -Name "192.168.17.28" -PrinterHostAddress "192.168.17.28"
+  Add-Printer -Name "Ricoh Printer" -DriverName "Gestetner IM 350 PCL 6" -PortName "192.168.17.28"
+  Write-Host -Foreground Green "[x] Driver installed."
+}
+Catch {
+  Write-Error "Unable to add Ricoh printer driver."
+}
+# ==========================================
+# Setting computer name and adding to domain
+# ==========================================
+
 Write-Host -Foreground Yellow "Initiating computer name change."
 $computerName = Read-Host "Enter new computer name:"
 Add-Computer -DOmainName "aiig.com" -NewName $computerName
