@@ -131,11 +131,11 @@ Set-ItemProperty -Path $profileListKey -Name "ProfilesDirectory" -Value "D:\Prof
 # ================
 # Install software
 # ================
-$javaPath = "JavaOCI/jre-8u341-windows-i586.exe"
+$javaPath = "JavaOCI\jre-8u341-windows-i586.exe"
 
 if (-not (Test-Path $javaPath)) {
   Try {
-    $javaPath /s
+    Start-Process -Path "$javaPath" -Argument "/s"
   }
   Catch {
     Write-Error "Something went wrong with the Java Installation."
