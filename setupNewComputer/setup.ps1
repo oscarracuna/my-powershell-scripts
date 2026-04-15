@@ -1,6 +1,6 @@
-Write-Host -Foreground Yellow "# ========================================="
-Write-Host -Foreground Yellow "# Script created and maintained by Óscar A."
-Write-Host -Foreground Yellow "# ========================================="
+# ========================================="
+# Script created and maintained by Óscar A."
+# ========================================="
 
 # Enforce Admin Check
 If (-NOT ([Security.Principal.WindowsPrincipal] `
@@ -10,6 +10,11 @@ If (-NOT ([Security.Principal.WindowsPrincipal] `
     Write-Error "This script must be run as Administrator."
     Exit 1
 }
+
+Write-Host -Foreground Red "# ====================================================================="
+Write-Host -Foreground Yellow "MAKE SURE YOU UNPLUG THE EXTERNAL SSD OR USB THAT CONTAINS THESE FILES!!!"
+Write-Host -Foreground Red "# ====================================================================="
+Read-Host "Press enter to continue..."
 
 
 Write-Host "Starting system configuration..." -Foreground Cyan
@@ -81,6 +86,8 @@ else {
 # Create Folders in new partition
 # ===============================
 
+Write-Host -Foreground Yellow "Creating folders in D:\"
+
 $folders = @(
     "D:\Profiles",
     "D:\Outlook",
@@ -90,9 +97,9 @@ $folders = @(
 foreach ($folder in $folders) {
     if (-not (Test-Path $folder)) {
         New-Item -Path $folder -ItemType Directory -Force | Out-Null
-        Write-Host "Created $folder"
+        Write-Host -Foreground Green "[x] $folder created"
     } else {
-        Write-Host "$folder already exists"
+        Write-Host "[ ] $folder already exists"
     }
 }
 
@@ -104,15 +111,17 @@ $userName = "Soporte"
 
 If (-not (Get-LocalUser -Name $userName -ErrorAction SilentlyContinue)) {
 
-    Write-Host "Creating local admin user: $userName" -Foreground Yellow
+    Write-Host "[ ] Creating local admin user: $userName" -Foreground Yellow
 
     $newSoportePassword = Read-Host -AsSecureString "Enter new password:"
     
     New-LocalUser -Name $userName -Password $newSoportePassword
 
     Add-LocalGroupMember -Group "Administrators" -Member $userName
+
+    Write-Host -Foreground Green "[x] $userName created."
 } else {
-    Write-Host "User $userName already exists. Skipping." -Foreground Green
+    Write-Host "User $userName already exists. Skipping." -Foreground Red
 }
 
 
@@ -126,20 +135,21 @@ Write-Host "Setting ProfilesDirectory to D:\Profiles" -Foreground Yellow
 
 Set-ItemProperty -Path $profileListKey -Name "ProfilesDirectory" -Value "D:\Profiles"
 
+Write-Host -Foreground Green "[x] ProfilesDirectory has been set to D:\Profiles."
 
 
 # ================
 # Install software
 # ================
-$javaPath = "JavaOCI\jre-8u341-windows-i586.exe"
 
-if (-not (Test-Path $javaPath)) {
-  Try {
-    Start-Process -Path "$javaPath" -Argument "/s"
-  }
-  Catch {
-    Write-Error "Something went wrong with the Java Installation."
-  }
+Write-Host -Foreground Yellow "[ ] Installing Java silently."
+
+Try {
+  Start-Process -FilePath "JavaOCI\jre-8u341-windows-i586.exe" -Argument "/s"
+  Write-Host -Foreground Green "[x] Java has been installed."
+}
+Catch {
+  Write-Error "Something went wrong with the Java Installation."
 }
 
 # =================================
@@ -158,15 +168,17 @@ Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 
 $newAdminPassword = Read-Host -AsSecureString "Enter the new password for Administrator account:"
 Write-Host -Foreground Yellow "Changing Administrator password and disabling account..."
-Set-LocalUser -Name Administator -Password $newPassword
+Set-LocalUser -Name Administator -Password $newAdminPassword
 Disable-LocalUser -Name Administrator
 Write-Host -Foreground Green "Admin password changed and account disabled."
 
 # ===============================================
 # Getting printer drivers and installing printers
 # ===============================================
+Write-Host -Foreground Yellow "Initiating computer name change."
 $computerName = Read-Host "Enter new computer name:"
 Add-Computer -DOmainName "aiig.com" -NewName $computerName
+Write-Host -Foreground Green "[x] computer name has been changed. Reboot."
 
 # ==========
 # Completion
