@@ -152,6 +152,15 @@ Catch {
   Write-Error "Something went wrong with the Java Installation."
 }
 
+Write-Host -Foreground Yellow "[ ] Installing Windows Runtime silently."
+Try {
+  Start-Process -FilePath "windowsdesktop-runtime-8.0.26-win-x64.exe" -Argument "/s"
+  Write-Host -Foreground Green "[x] Windows Runtime installed."
+}
+Catch {
+  Write-Error "Something went wrong with the Desktop Runtime installation."
+}
+
 # =================================
 # Disable Windows Defender Firewall
 # =================================
