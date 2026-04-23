@@ -149,15 +149,6 @@ Catch {
   Write-Error "Something went wrong with the Desktop Runtime installation."
 }
 
-# =================================
-# Disable Windows Defender Firewall
-# =================================
-Write-Host -Foreground Yellow "Checking if Firewall is enabled..."
-Get-NetFirewallProfile | Select Name,Enabled 
-
-Write-Host -Foreground Yellow "Disabling Firewall..."
-Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
-
 
 # =========================================
 # Disable admin account and change password
@@ -191,6 +182,19 @@ Try  {
 Catch {
   Write-Error "Unable to add Ricoh printer driver."
 }
+
+# ===========================
+# Installing EndpointCentral. 
+# ===========================
+
+Write-Host -Foreground Yellow "Installing EPC."
+Try {
+  Start-Process -FilePath ".\EndpointCentral\setup.bat"
+}
+Catch {
+  Write-Error "Unable to install EPC. Please install it manually."
+}
+
 # ==========================================
 # Setting computer name and adding to domain
 # ==========================================
