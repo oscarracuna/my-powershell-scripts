@@ -174,9 +174,13 @@ Try {
 
 Write-Host -Foreground Yellow "Installing Ricoh printer."
 Try  {
+  Write-Host -Foreground Yellow "Installing driver."
   pnputil -i -a ".\ricoh-driver\disk1\MP_350__.inf"
+  Write-Host -Foreground Yellow "Adding driver."
+  Add-PrinterDriver "Gestetner IM 430 PCL 6"
+  Write-Host -Foreground Yellow "Adding printer."
   Add-PrinterPort -Name "192.168.17.28" -PrinterHostAddress "192.168.17.28"
-  Add-Printer -Name "Ricoh Printer" -DriverName "Gestetner IM 350 PCL 6" -PortName "192.168.17.28"
+  Add-Printer -Name "Ricoh Printer" -DriverName "Gestetner IM 430 PCL 6" -PortName "192.168.17.28"
   Write-Host -Foreground Green "[x] Driver installed."
 }
 Catch {
