@@ -156,7 +156,7 @@ Catch {
 
 $newAdminPassword = Read-Host -AsSecureString "Enter the new password for Administrator account:"
 Write-Host -Foreground Yellow "Changing Administrator password and disabling account..."
-Set-LocalUser -Name Administator -Password $newAdminPassword
+Set-LocalUser -Name Administrator -Password $newAdminPassword
 Disable-LocalUser -Name Administrator
 Write-Host -Foreground Green "[x] Local Administrator password changed and account disabled."
 
