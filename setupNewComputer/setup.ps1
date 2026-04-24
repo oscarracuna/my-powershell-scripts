@@ -167,6 +167,7 @@ Write-Host -Foreground Green "[x] Local Administrator password changed and accou
 Write-Host -Foreground Yellow "Installing HP color printer."
 Try {
   Start-Process -FilePath ".\HP-Driver-UPDPCL6\Install.exe" -ArgumentList "/q /h /dst /sm192.168.17.41 /nHPColor"
+  Rename-Printer -Name "HPColor" -NewName "Central HP Color"
   Write-Host -Foreground Green "[x] Printer has been installed."
 } Catch {
   Write-Error "Unable to add printer."
@@ -185,6 +186,17 @@ Try  {
 }
 Catch {
   Write-Error "Unable to add Ricoh printer driver."
+}
+
+# ==============
+# Installing VPN 
+# ==============
+Try {
+  Write-Host -Foreground "Installing VPN."
+  Start-Process -Path "VPN\ConnectTunnel_x64-12.5.0.221.exe"
+}
+Catch {
+  Write-Error "Unable to install VPN."
 }
 
 # ===========================
