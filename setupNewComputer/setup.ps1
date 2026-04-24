@@ -199,6 +199,18 @@ Catch {
   Write-Error "Unable to install VPN."
 }
 
+# ==============
+# Installing VPN 
+# ==============
+
+Try {
+  Write-Host -Foreground Yellow "Installing Dell Command"
+  Start-Process -Path "Dell-Command-Update-Windows-Universal.exe" 
+}
+Catch {
+  Write-Error "Unable to install Dell Command. Try installing the app specific for your hardware."
+}
+
 # ===========================
 # Installing EndpointCentral. 
 # ===========================
