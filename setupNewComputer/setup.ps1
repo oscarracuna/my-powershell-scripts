@@ -149,7 +149,6 @@ Catch {
   Write-Error "Something went wrong with the Desktop Runtime installation."
 }
 
-
 # =========================================
 # Disable admin account and change password
 # =========================================
@@ -166,7 +165,9 @@ Write-Host -Foreground Green "[x] Local Administrator password changed and accou
 
 Write-Host -Foreground Yellow "Installing HP color printer."
 Try {
+  Add-PrinterPort -Name "192.168.17.41" -PrinterHostAddress "192.168.17.41"
   Start-Process -FilePath ".\HP-Driver-UPDPCL6\Install.exe" -ArgumentList "/q /h /dst /sm192.168.17.41 /nHPColor"
+  Start-Sleep -seconds 10
   Rename-Printer -Name "HPColor" -NewName "Central HP Color"
   Write-Host -Foreground Green "[x] Printer has been installed."
 } Catch {
@@ -188,40 +189,65 @@ Catch {
   Write-Error "Unable to add Ricoh printer driver."
 }
 
+# ======================
+# Installing Bitdefender 
+# ======================
+
+Start-Process -FilePath ".\bitdefender-installer.exe"
+
 # ==============
 # Installing VPN 
 # ==============
+
+Write-Host -Foreground Yellow "Installing VPN."
 Try {
   Write-Host -Foreground "Installing VPN."
-  Start-Process -Path "VPN\ConnectTunnel_x64-12.5.0.221.exe"
+  Start-Process -FilePath "VPN\ConnectTunnel_x64-12.5.0.221.exe" -ArgumentList "/s"
+  Write-Host -Foreground Green "[x] VPN has been installed."
 }
 Catch {
   Write-Error "Unable to install VPN."
 }
 
-# ==============
-# Installing VPN 
-# ==============
+# ==========================
+# Installing EndpointCentral 
+# ==========================
+
+Write-Host -Foreground Yellow "Installing EPC."
+Try {
+  Write-Host -Foreground "Installing EPC."
+  Start-Process -FilePath ".\EndpointCentral\setup.bat"
+  Write-Host -Foreground Green "[x] EPC has been installed."
+}
+Catch {
+  Write-Error "Unable to install EPC. Please install it manually."
+}
+
+# ==========================
+# Installing Outlook Classic 
+# ==========================
+
+Write-Host -Foreground Yellow "Installing Outlook classic."
+Try {
+  Start-Process -FilePath ".\OfficeSetup.exe"
+  Write-Host -Foreground Green "[x] Outlook Classic has been installed."
+}
+Catch {
+  Write-Error "Unable to install Outlook Classic. Reboot before you try to install it again."
+}
+
+# =======================
+# Installing Dell Command 
+# =======================
 
 Try {
   Write-Host -Foreground Yellow "Installing Dell Command"
-  Start-Process -Path "Dell-Command-Update-Windows-Universal.exe" 
+  Start-Process -FilePath "Dell-Command-Update-Windows-Universal.exe" 
 }
 Catch {
   Write-Error "Unable to install Dell Command. Try installing the app specific for your hardware."
 }
 
-# ===========================
-# Installing EndpointCentral. 
-# ===========================
-
-Write-Host -Foreground Yellow "Installing EPC."
-Try {
-  Start-Process -FilePath ".\EndpointCentral\setup.bat"
-}
-Catch {
-  Write-Error "Unable to install EPC. Please install it manually."
-}
 
 # ==========================================
 # Setting computer name and adding to domain
