@@ -189,12 +189,6 @@ Catch {
   Write-Error "Unable to add Ricoh printer driver."
 }
 
-# ======================
-# Installing Bitdefender 
-# ======================
-
-Start-Process -FilePath ".\bitdefender-installer.exe"
-
 # ==============
 # Installing VPN 
 # ==============
@@ -216,7 +210,7 @@ Catch {
 Write-Host -Foreground Yellow "Installing EPC."
 Try {
   Write-Host -Foreground "Installing EPC."
-  Start-Process -FilePath ".\EndpointCentral\setup.bat"
+  cmd.exe /c 'start /wait msiexec /i EndpointCentral\UEMSAgent.msi TRANSFORMS="EndpointCentral\UEMSAgent.mst" ENABLESILENT=yes REBOOT=ReallySuppress INSTALLSOURCE=Manual SERVER_ROOT_CRT="EndpointCentral\DMRootCA-Server.crt" DS_ROOT_CRT="EndpointCentral\DMRootCA.crt" /lv Agentinstalllog.txt' 
   Write-Host -Foreground Green "[x] EPC has been installed."
 }
 Catch {
@@ -248,19 +242,38 @@ Catch {
   Write-Error "Unable to install Dell Command. Try installing the app specific for your hardware."
 }
 
+# ============
+# Enabling WoL 
+# ============
+
+Try {
+  Write-Host -Foreground Yellow "Enabling WoL."
+  Get-NetAdapter -Name "Ethernet*"  | Set-NetAdapterPowerManagement -WakeOnMagicPacket Enabled -WakeOnPattern Enabled
+  Write-Host -Foreground Green "[x] WoL enabled on all Ethernet Ports."
+}
+Catch {
+  Write-Error "Unable to set up WoL. Please check the name of the NetAdapters or enable manually."
+}
 
 # ==========================================
 # Setting computer name and adding to domain
 # ==========================================
 
-Write-Host -Foreground Yellow "Initiating computer name change."
-$computerName = Read-Host "Enter new computer name:"
-Add-Computer -DOmainName "aiig.com" -NewName $computerName
-Write-Host -Foreground Green "[x] computer name has been changed. Reboot."
+$answer = Read-Host "Add computer to domain? (y/n)"
+if $answer -eq "y" {
+  Write-Host -Foreground Yellow "Initiating computer name change."
+  $computerName = Read-Host "Enter new computer name:"
+  Add-Computer -DOmainName "aiig.com" -NewName $computerName
+  Write-Host -Foreground Green "[x] computer name has been changed. Reboot."
+} 
+Else {
+  Write-Host -Foreground Yellow "Skipping domain join."
+  Continue
+}
 
 # ==========
 # Completion
 # ==========
 
-Write-Host "Configuration completed successfully." -Foreground Cyan
-Write-Host "A reboot is recommended before creating new user profiles." -Foreground Magenta
+Write-Host "Configuration completed successfully." -Foreground Green
+Write-Host "A reboot is recommended before creating new user profiles." -Foreground Yellow 
