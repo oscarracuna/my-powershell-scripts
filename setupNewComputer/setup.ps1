@@ -142,7 +142,7 @@ Catch {
 
 Write-Host -Foreground Yellow "[ ] Installing Windows Runtime silently."
 Try {
-  Start-Process -FilePath "windowsdesktop-runtime-8.0.26-win-x64.exe" -Argument "/s"
+  Start-Process -FilePath "windowsdesktop-runtime-8.0.26-win-x64.exe" #-Argument "/s"
   Write-Host -Foreground Green "[x] Windows Runtime installed."
 }
 Catch {
@@ -196,7 +196,7 @@ Catch {
 Write-Host -Foreground Yellow "Installing VPN."
 Try {
   Write-Host -Foreground "Installing VPN."
-  Start-Process -FilePath "VPN\ConnectTunnel_x64-12.5.0.221.exe" -ArgumentList "/s"
+  Start-Process -FilePath "VPN\ConnectTunnel_x64-12.5.0.221.exe" #-ArgumentList "/s"
   Write-Host -Foreground Green "[x] VPN has been installed."
 }
 Catch {
@@ -260,7 +260,7 @@ Catch {
 # ==========================================
 
 $answer = Read-Host "Add computer to domain? (y/n)"
-if $answer -eq "y" {
+if ($answer -ieq "y") {
   Write-Host -Foreground Yellow "Initiating computer name change."
   $computerName = Read-Host "Enter new computer name:"
   Add-Computer -DOmainName "aiig.com" -NewName $computerName
