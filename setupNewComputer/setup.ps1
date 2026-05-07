@@ -196,7 +196,7 @@ Catch {
 Write-Host -Foreground Yellow "Installing VPN."
 Try {
   Write-Host -Foreground "Installing VPN."
-  Start-Process -FilePath "VPN\ConnectTunnel_x64-12.5.0.221.exe" #-ArgumentList "/s"
+  Start-Process -FilePath "ConnectTunnel_x64.exe" #-ArgumentList "/s"
   Write-Host -Foreground Green "[x] VPN has been installed."
 }
 Catch {
@@ -210,7 +210,8 @@ Catch {
 Write-Host -Foreground Yellow "Installing EPC."
 Try {
   Write-Host -Foreground "Installing EPC."
-  cmd.exe /c 'start /wait msiexec /i EndpointCentral\UEMSAgent.msi TRANSFORMS="EndpointCentral\UEMSAgent.mst" ENABLESILENT=yes REBOOT=ReallySuppress INSTALLSOURCE=Manual SERVER_ROOT_CRT="EndpointCentral\DMRootCA-Server.crt" DS_ROOT_CRT="EndpointCentral\DMRootCA.crt" /lv Agentinstalllog.txt' 
+  Start-Process -FilePath "EPC\epskit_x64.exe"
+  # cmd.exe /c 'start /wait msiexec /i EndpointCentral\UEMSAgent.msi TRANSFORMS="EndpointCentral\UEMSAgent.mst" ENABLESILENT=yes REBOOT=ReallySuppress INSTALLSOURCE=Manual SERVER_ROOT_CRT="EndpointCentral\DMRootCA-Server.crt" DS_ROOT_CRT="EndpointCentral\DMRootCA.crt" /lv Agentinstalllog.txt' 
   Write-Host -Foreground Green "[x] EPC has been installed."
 }
 Catch {
