@@ -1,7 +1,7 @@
 Function isItOpen {
     $ip = Read-Host "Enter IP" 
     
-    $ports = @("20","21","22","23","25","80","88","135","443","464","465","593","8080")
+    $ports = @("20","21","22","23","25","80","88","135","443","464","465","593","1001","1002","1003","8080")
 
     ForEach ($Port in $Ports) {
         $tcpClient = New-Object System.Net.Sockets.TcpClient

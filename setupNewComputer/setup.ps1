@@ -101,7 +101,7 @@ If (-not (Get-LocalUser -Name $userName -ErrorAction SilentlyContinue)) {
 
     Write-Host "[ ] Creating local admin user: $userName" -Foreground Yellow
 
-    $newSoportePassword = Read-Host -AsSecureString "Enter new password:"
+    $newSoportePassword = Read-Host -AsSecureString "Enter new password"
     
     New-LocalUser -Name $userName -Password $newSoportePassword
 
@@ -153,7 +153,7 @@ Catch {
 # Disable admin account and change password
 # =========================================
 
-$newAdminPassword = Read-Host -AsSecureString "Enter the new password for Administrator account:"
+$newAdminPassword = Read-Host -AsSecureString "Enter the new password for Administrator account"
 Write-Host -Foreground Yellow "Changing Administrator password and disabling account..."
 Set-LocalUser -Name Administrator -Password $newAdminPassword
 Disable-LocalUser -Name Administrator
@@ -168,7 +168,7 @@ Try {
   Add-PrinterPort -Name "192.168.17.41" -PrinterHostAddress "192.168.17.41"
   Start-Process -FilePath ".\HP-Driver-UPDPCL6\Install.exe" -ArgumentList "/q /h /dst /sm192.168.17.41 /nHPColor"
   Start-Sleep -seconds 10
-  Rename-Printer -Name "HPColor" -NewName "Central HP Color"
+  #Rename-Printer -Name "HPColor" -NewName "Central HP Color"
   Write-Host -Foreground Green "[x] Printer has been installed."
 } Catch {
   Write-Error "Unable to add printer."
