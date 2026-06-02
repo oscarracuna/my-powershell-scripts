@@ -25,6 +25,9 @@ function Write-Log {
 
 Write-Log "===== STARTING CONFIGURATION ====="
 
+Write-Host -Foreground Green "Disabling Powershell history."
+Set-PSReadLineOption -HistorySaveStyle SaveNothing
+
 # =================
 # Profiles Redirect
 # =================
