@@ -16,7 +16,9 @@ Function mapDrive {
     Try {
       $preLocalPath = ":"
       $localPath = $availableLetter + $preLocalPath
-      New-SmbMapping -LocalPath $localPath -RemotePath $drive -Persistent $true
+      Write-Host -Foreground Green "Mapping $drive..."
+      New-SmbMapping -LocalPath $localPath -RemotePath $drive  
+      
     }
     Catch {
       Write-Error "Error mapping drive $drive."

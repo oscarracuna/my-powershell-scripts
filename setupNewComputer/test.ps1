@@ -93,6 +93,14 @@ function Set-LocalAdmin {
 
 if (-not $NoLocalAdmin) { Set-LocalAdmin }
 
+# =============
+# Admin disable
+# =============
+if (-not $NoAdminDisable) {
+    $pwd = Read-Host -AsSecureString "Admin password"
+    Set-LocalUser Administrator -Password $pwd
+    Disable-LocalUser Administrator
+}
 
 # ================
 # Install Function
@@ -158,15 +166,6 @@ if (-not $NoWOL) {
     Write-Host -Foreground Green "Enabling WakeOnMagicPacket and WakeOnPattern on all Ethernet interfaces."
     Get-NetAdapter -Name "Ethernet*" | Set-NetAdapterPowerManagement -WakeOnMagicPacket Enabled
     Get-NetAdapter -Name "Ethernet*" | Set-NetAdapterPowerManagement -WakeOnPattern Enabled
-}
-
-# =============
-# Admin disable
-# =============
-if (-not $NoAdminDisable) {
-    $pwd = Read-Host -AsSecureString "Admin password"
-    Set-LocalUser Administrator -Password $pwd
-    Disable-LocalUser Administrator
 }
 
 # ===========
