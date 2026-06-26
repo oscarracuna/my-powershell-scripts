@@ -10,7 +10,8 @@ param(
     [switch]$NoDellCommand,
     [switch]$NoWOL,
     [switch]$NoDomainJoin,
-    [switch]$NoAdminDisable
+    [switch]$NoAdminDisable,
+    [switch]$Office32
 )
 
 # =======
@@ -140,6 +141,13 @@ if (-not $NoDellCommand) {
     Install-App "Dell-Command-Update-Windows-Universal.exe" "/s" "Dell Command"
 }
 
+if (-not $Office32) {
+  Install-App "OfficeSetup.exe" "/s" "Office 32 bits"
+}
+
+if ($Office32) {
+  Install-App "OfficeSetup32bits.exe" "Office 64 bits"
+}
 # ========
 # Printers
 # ========
@@ -175,6 +183,7 @@ if (-not $NoDomainJoin) {
       $computerName = Read-Host "New computer name"
       Add-Computer -DomainName "aiig.com" -NewName $computerName
 }
+
 
 Write-Log "===== COMPLETED ====="
 Stop-Transcript
